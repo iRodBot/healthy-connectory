@@ -3,23 +3,44 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { Heart, ArrowRight, CheckCircle } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface FormData {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  medicalConditions: string;
+  medicalConditions: string[];
   medications: string;
   allergies: string;
 }
+
+const commonIllnesses = [
+  "Hypertension",
+  "Diabetes",
+  "Asthma",
+  "Arthritis",
+  "Depression",
+  "Anxiety",
+  "Heart Disease",
+  "Chronic Pain",
+  "Migraines",
+  "Sleep Disorders",
+];
 
 const initialFormData: FormData = {
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
-  medicalConditions: "",
+  medicalConditions: [],
   medications: "",
   allergies: "",
 };
@@ -35,6 +56,19 @@ const Index = () => {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleConditionToggle = (condition: string) => {
+    setFormData((prev) => {
+      const updatedConditions = prev.medicalConditions.includes(condition)
+        ? prev.medicalConditions.filter((c) => c !== condition)
+        : [...prev.medicalConditions, condition];
+
+      return {
+        ...prev,
+        medicalConditions: updatedConditions,
+      };
+    });
   };
 
   const handleNext = () => {
@@ -151,13 +185,26 @@ const Index = () => {
                 className="space-y-4"
               >
                 <h2 className="text-2xl font-semibold mb-6">Medical History</h2>
-                <textarea
-                  name="medicalConditions"
-                  placeholder="Please list any medical conditions"
-                  value={formData.medicalConditions}
-                  onChange={handleInputChange}
-                  className="input-field min-h-[100px]"
-                />
+                <div className="space-y-4">
+                  <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Select any conditions you have:
+                  </label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {commonIllnesses.map((illness) => (
+                      <label
+                        key={illness}
+                        className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                      >
+                        <Checkbox
+                          checked={formData.medicalConditions.includes(illness)}
+                          onCheckedChange={() => handleConditionToggle(illness)}
+                          className="data-[state=checked]:bg-primary"
+                        />
+                        <span className="text-sm">{illness}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
                 <textarea
                   name="medications"
                   placeholder="Current medications"
@@ -209,3 +256,4 @@ const Index = () => {
 };
 
 export default Index;
+
