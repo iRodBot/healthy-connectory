@@ -10,11 +10,11 @@ interface ContactFormProps {
 export const ContactForm = ({ formData, handleInputChange }: ContactFormProps) => {
   return (
     <motion.div
-      initial={{ x: 20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="space-y-4"
     >
-      <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
+      <h2 className="text-2xl font-semibold mb-6 pb-2 border-b border-gray-200">Contact Information</h2>
       <div className="grid grid-cols-2 gap-4">
         <input
           type="text"

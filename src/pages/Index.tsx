@@ -2,14 +2,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, ArrowRight, CheckCircle } from "lucide-react";
+import { Heart, CheckCircle } from "lucide-react";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { MedicalHistoryForm } from "@/components/forms/MedicalHistoryForm";
 import { AdditionalInfoForm } from "@/components/forms/AdditionalInfoForm";
 import { FormData, initialFormData } from "@/types/form";
 
 const Index = () => {
-  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const { toast } = useToast();
 
@@ -34,8 +33,10 @@ const Index = () => {
     });
   };
 
-  const handleNext = () => {
-    if (step === 1 && (!formData.firstName || !formData.lastName || !formData.email || !formData.phone)) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
       toast({
         title: "Please fill in all fields",
         description: "All contact information is required",
@@ -43,11 +44,7 @@ const Index = () => {
       });
       return;
     }
-    if (step < 3) setStep((prev) => prev + 1);
-  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
     toast({
       title: "Success!",
       description: "Your information has been submitted successfully.",
@@ -58,7 +55,6 @@ const Index = () => {
       ),
     });
     setFormData(initialFormData);
-    setStep(1);
   };
 
   return (
@@ -85,49 +81,19 @@ const Index = () => {
           transition={{ delay: 0.2 }}
           className="form-container"
         >
-          <div className="flex justify-between mb-8">
-            {[1, 2, 3].map((num) => (
-              <div
-                key={num}
-                className={`h-3 w-3 rounded-full ${
-                  num <= step ? "bg-primary" : "bg-gray-200"
-                } transition-all duration-300`}
-              />
-            ))}
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {step === 1 && (
-              <ContactForm formData={formData} handleInputChange={handleInputChange} />
-            )}
-
-            {step === 2 && (
-              <MedicalHistoryForm
-                formData={formData}
-                handleInputChange={handleInputChange}
-                handleConditionToggle={handleConditionToggle}
-              />
-            )}
-
-            {step === 3 && (
-              <AdditionalInfoForm formData={formData} handleInputChange={handleInputChange} />
-            )}
+          <form onSubmit={handleSubmit} className="space-y-12">
+            <ContactForm formData={formData} handleInputChange={handleInputChange} />
+            <MedicalHistoryForm
+              formData={formData}
+              handleInputChange={handleInputChange}
+              handleConditionToggle={handleConditionToggle}
+            />
+            <AdditionalInfoForm formData={formData} handleInputChange={handleInputChange} />
 
             <div className="flex justify-end pt-4">
-              {step < 3 ? (
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  className="btn-primary flex items-center"
-                >
-                  Next
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </button>
-              ) : (
-                <button type="submit" className="btn-primary">
-                  Submit
-                </button>
-              )}
+              <button type="submit" className="btn-primary">
+                Submit
+              </button>
             </div>
           </form>
         </motion.div>

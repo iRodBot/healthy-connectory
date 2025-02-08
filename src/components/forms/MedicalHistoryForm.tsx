@@ -16,11 +16,11 @@ export const MedicalHistoryForm = ({
 }: MedicalHistoryFormProps) => {
   return (
     <motion.div
-      initial={{ x: 20, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="space-y-4"
     >
-      <h2 className="text-2xl font-semibold mb-6">Medical History</h2>
+      <h2 className="text-2xl font-semibold mb-6 pb-2 border-b border-gray-200">Medical History</h2>
       <div className="space-y-4">
         <label className="text-sm font-medium text-gray-700 mb-2 block">
           Select any conditions you have:
