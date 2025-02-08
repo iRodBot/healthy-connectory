@@ -3,47 +3,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
 import { Heart, ArrowRight, CheckCircle } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-
-interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  medicalConditions: string[];
-  medications: string;
-  allergies: string;
-}
-
-const commonIllnesses = [
-  "Hypertension",
-  "Diabetes",
-  "Asthma",
-  "Arthritis",
-  "Depression",
-  "Anxiety",
-  "Heart Disease",
-  "Chronic Pain",
-  "Migraines",
-  "Sleep Disorders",
-];
-
-const initialFormData: FormData = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  medicalConditions: [],
-  medications: "",
-  allergies: "",
-};
+import { ContactForm } from "@/components/forms/ContactForm";
+import { MedicalHistoryForm } from "@/components/forms/MedicalHistoryForm";
+import { AdditionalInfoForm } from "@/components/forms/AdditionalInfoForm";
+import { FormData, initialFormData } from "@/types/form";
 
 const Index = () => {
   const [step, setStep] = useState(1);
@@ -135,101 +98,19 @@ const Index = () => {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {step === 1 && (
-              <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                className="space-y-4"
-              >
-                <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className="input-field"
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className="input-field"
-                  />
-                </div>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="input-field"
-                />
-                <input
-                  type="tel"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className="input-field"
-                />
-              </motion.div>
+              <ContactForm formData={formData} handleInputChange={handleInputChange} />
             )}
 
             {step === 2 && (
-              <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                className="space-y-4"
-              >
-                <h2 className="text-2xl font-semibold mb-6">Medical History</h2>
-                <div className="space-y-4">
-                  <label className="text-sm font-medium text-gray-700 mb-2 block">
-                    Select any conditions you have:
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    {commonIllnesses.map((illness) => (
-                      <label
-                        key={illness}
-                        className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors"
-                      >
-                        <Checkbox
-                          checked={formData.medicalConditions.includes(illness)}
-                          onCheckedChange={() => handleConditionToggle(illness)}
-                          className="data-[state=checked]:bg-primary"
-                        />
-                        <span className="text-sm">{illness}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <textarea
-                  name="medications"
-                  placeholder="Current medications"
-                  value={formData.medications}
-                  onChange={handleInputChange}
-                  className="input-field min-h-[100px]"
-                />
-              </motion.div>
+              <MedicalHistoryForm
+                formData={formData}
+                handleInputChange={handleInputChange}
+                handleConditionToggle={handleConditionToggle}
+              />
             )}
 
             {step === 3 && (
-              <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                className="space-y-4"
-              >
-                <h2 className="text-2xl font-semibold mb-6">Additional Information</h2>
-                <textarea
-                  name="allergies"
-                  placeholder="Please list any allergies"
-                  value={formData.allergies}
-                  onChange={handleInputChange}
-                  className="input-field min-h-[100px]"
-                />
-              </motion.div>
+              <AdditionalInfoForm formData={formData} handleInputChange={handleInputChange} />
             )}
 
             <div className="flex justify-end pt-4">
@@ -256,4 +137,3 @@ const Index = () => {
 };
 
 export default Index;
-
