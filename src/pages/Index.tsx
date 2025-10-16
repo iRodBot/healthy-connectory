@@ -6,10 +6,12 @@ import { Heart, CheckCircle } from "lucide-react";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { MedicalHistoryForm } from "@/components/forms/MedicalHistoryForm";
 import { AdditionalInfoForm } from "@/components/forms/AdditionalInfoForm";
+import { ReviewScreen } from "@/components/forms/ReviewScreen";
 import { FormData, initialFormData } from "@/types/form";
 
 const Index = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [isReviewMode, setIsReviewMode] = useState(false);
   const { toast } = useToast();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -45,6 +47,11 @@ const Index = () => {
       return;
     }
 
+    // Show review screen instead of immediately submitting
+    setIsReviewMode(true);
+  };
+
+  const handleFinalSubmit = () => {
     toast({
       title: "Success!",
       description: "Your information has been submitted successfully.",
@@ -55,6 +62,15 @@ const Index = () => {
       ),
     });
     setFormData(initialFormData);
+    setIsReviewMode(false);
+  };
+
+  const handleBackToForm = () => {
+    setIsReviewMode(false);
+  };
+
+  const handleEditFromReview = () => {
+    setIsReviewMode(false);
   };
 
   return (
@@ -68,10 +84,14 @@ const Index = () => {
           <div className="flex justify-center mb-4">
             <Heart className="h-12 w-12 text-primary" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Your Health Journey Starts Here</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            {isReviewMode ? "Review Your Information" : "Your Health Journey Starts Here"}
+          </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Take the first step towards better health by sharing your information with us.
-            We're here to support your wellness journey.
+            {isReviewMode 
+              ? "Please review your information below and confirm your submission."
+              : "Take the first step towards better health by sharing your information with us. We're here to support your wellness journey."
+            }
           </p>
         </motion.div>
 
@@ -81,21 +101,30 @@ const Index = () => {
           transition={{ delay: 0.2 }}
           className="form-container"
         >
-          <form onSubmit={handleSubmit} className="space-y-12">
-            <ContactForm formData={formData} handleInputChange={handleInputChange} />
-            <MedicalHistoryForm
+          {isReviewMode ? (
+            <ReviewScreen
               formData={formData}
-              handleInputChange={handleInputChange}
-              handleConditionToggle={handleConditionToggle}
+              onEdit={handleEditFromReview}
+              onFinalSubmit={handleFinalSubmit}
+              onBack={handleBackToForm}
             />
-            <AdditionalInfoForm formData={formData} handleInputChange={handleInputChange} />
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-12">
+              <ContactForm formData={formData} handleInputChange={handleInputChange} />
+              <MedicalHistoryForm
+                formData={formData}
+                handleInputChange={handleInputChange}
+                handleConditionToggle={handleConditionToggle}
+              />
+              <AdditionalInfoForm formData={formData} handleInputChange={handleInputChange} />
 
-            <div className="flex justify-end pt-4">
-              <button type="submit" className="btn-primary">
-                Submit
-              </button>
-            </div>
-          </form>
+              <div className="flex justify-end pt-4">
+                <button type="submit" className="btn-primary">
+                  Review & Submit
+                </button>
+              </div>
+            </form>
+          )}
         </motion.div>
       </div>
     </div>
