@@ -2,7 +2,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, CheckCircle } from "lucide-react";
+import { Heart, CheckCircle, Settings } from "lucide-react";
+import { Link } from "react-router-dom";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { MedicalHistoryForm } from "@/components/forms/MedicalHistoryForm";
 import { AdditionalInfoForm } from "@/components/forms/AdditionalInfoForm";
@@ -59,6 +60,15 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-primary/5">
+      <div className="absolute top-4 right-4">
+        <Link
+          to="/settings"
+          className="flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:bg-white/90 transition-all duration-200 text-gray-700 hover:text-primary"
+        >
+          <Settings className="h-4 w-4" />
+          Settings
+        </Link>
+      </div>
       <div className="section-padding">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
